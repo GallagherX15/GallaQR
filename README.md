@@ -7,8 +7,8 @@ Generador de códigos QR moderno, fluido y multiplataforma (**Linux, Windows y W
 ## 🌐 Versión Web Online
 
 Pruébalo directamente en el navegador sin instalar nada:  
-👉 **[Desplegar en Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FGallagherX15%2FGallaQR)**
-
+👉 **(https://gallaqr-web.vercel.app/)****
+https://gallaqr-web.vercel.app/
 ---
 
 ## 🚀 Características
