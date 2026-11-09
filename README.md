@@ -1,6 +1,13 @@
 # GallaQR ⚡
 
-Generador de códigos QR moderno, fluido y multiplataforma (Linux y Windows) escrito en Rust. Permite exportar en **SVG (vectorial)**, **PNG (con o sin fondo transparente)** y **JPG (con fondo sólido)**.
+Generador de códigos QR moderno, fluido y multiplataforma (**Linux, Windows y Web**). Permite exportar en **SVG (vectorial)**, **PNG (con o sin fondo transparente)** y **JPG (con fondo sólido)**.
+
+---
+
+## 🌐 Versión Web Online
+
+Pruébalo directamente en el navegador sin instalar nada:  
+👉 **[Desplegar en Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FGallagherX15%2FGallaQR)**
 
 ---
 
@@ -11,12 +18,12 @@ Generador de códigos QR moderno, fluido y multiplataforma (Linux y Windows) esc
 - **Portapapeles**: Copia directa de SVG o PNG con un solo clic.
 - **Historial integrado**: Guarda tus QRs con título descriptivo para reutilizarlos al abrir la app.
 - **Medidas**: Presets 1:1 (256 a 4096 px) y proporciones libres.
-- **Diseño responsive**: Se adapta a cualquier tamaño de ventana o pantalla.
-- **Multiplataforma**: Disponible para Linux y Windows (instalable y portable).
+- **Diseño responsive**: Se adapta a cualquier tamaño de ventana, móvil o pantalla.
+- **Multiplataforma**: Disponible como app nativa en Rust (Linux y Windows) y versión Web.
 
 ---
 
-## 📥 Descargas
+## 📥 Descargas de Escritorio
 
 Encuentra los binarios en [Releases](https://github.com/GallagherX15/GallaQR/releases):
 

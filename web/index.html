@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GallaQR - Generador de Códigos QR Online</title>
+  <meta name="description" content="Generador de Códigos QR para Linux, Windows y Web. Descarga en SVG vectorial, PNG sin fondo y JPG con fondo personalizado.">
+  <link rel="icon" type="image/png" href="assets/gallaqr.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar de Historial -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <span>📚 Historial de QRs</span>
+          <span class="badge" id="history-count">0</span>
+        </div>
+        <button class="btn btn-secondary btn-icon" id="btn-close-sidebar" title="Cerrar panel">◀</button>
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary btn-block" id="btn-new-qr">➕ Nuevo QR</button>
+        <div class="search-box">
+          <input type="text" id="history-search" placeholder="🔍 Filtrar historial...">
+        </div>
+      </div>
+
+      <div class="history-list" id="history-list">
+        <!-- Renderizado dinámico de tarjetas de historial -->
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="btn-link text-danger" id="btn-clear-history">Limpiar todo el historial</button>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+      <!-- Barra Superior -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn btn-secondary btn-sm" id="btn-toggle-sidebar">
+            <span id="toggle-sidebar-icon">☰</span> Historial
+          </button>
+          <div class="brand">
+            <img src="assets/gallaqr.png" alt="GallaQR" class="brand-logo">
+            <h1 class="brand-title">GallaQR <span class="version">Web</span></h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <a href="https://github.com/GallagherX15/GallaQR/releases" target="_blank" class="badge-link">
+            🐧 Linux & 🪟 Windows Apps
+          </a>
+          <a href="https://github.com/GallagherX15/GallaQR" target="_blank" class="btn btn-secondary btn-sm">
+            ⭐ GitHub
+          </a>
+        </div>
+      </header>
+
+      <!-- Toast de notificación -->
+      <div id="toast" class="toast hidden"></div>
+
+      <!-- Área de trabajo en 2 columnas -->
+      <div class="workspace">
+        <!-- Columna Izquierda: Entradas y Configuración -->
+        <div class="col">
+          <!-- Tarjeta 1: Datos -->
+          <div class="card">
+            <h2 class="card-title">📝 Datos del Código QR</h2>
+            <div class="form-group">
+              <label for="qr-title">Título descriptivo:</label>
+              <input type="text" id="qr-title" placeholder="Ej: Mi Portafolio Web, Menú Restaurante...">
+            </div>
+            <div class="form-group">
+              <label for="qr-content">Enlace URL o Contenido de texto:</label>
+              <textarea id="qr-content" rows="3" placeholder="https://ejemplo.com o cualquier texto..."></textarea>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" id="btn-generate">
+              ⚡ Generar y Guardar QR
+            </button>
+          </div>
+
+          <!-- Tarjeta 2: Estilo y Configuración -->
+          <div class="card">
+            <h2 class="card-title">🎨 Estilo y Configuración</h2>
+            <div class="form-group">
+              <label>Color del código QR:</label>
+              <div class="color-picker-row">
+                <input type="color" id="qr-color-picker" value="#000000">
+                <span class="hex-label">HEX:</span>
+                <input type="text" id="qr-color-hex" value="#000000" class="input-hex">
+              </div>
+              <div class="swatches" id="qr-swatches">
+                <button class="swatch" data-color="#000000" style="background:#000000" title="Negro"></button>
+                <button class="swatch" data-color="#FFFFFF" style="background:#FFFFFF" title="Blanco"></button>
+                <button class="swatch" data-color="#1E40AF" style="background:#1E40AF" title="Azul"></button>
+                <button class="swatch" data-color="#4F46E5" style="background:#4F46E5" title="Índigo"></button>
+                <button class="swatch" data-color="#059669" style="background:#059669" title="Esmeralda"></button>
+                <button class="swatch" data-color="#DC2626" style="background:#DC2626" title="Rojo"></button>
+                <button class="swatch" data-color="#7C3AED" style="background:#7C3AED" title="Púrpura"></button>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="form-row">
+              <div class="form-group col-half">
+                <label for="qr-ecc">Corrección de errores:</label>
+                <select id="qr-ecc">
+                  <option value="L">L (7% corrección)</option>
+                  <option value="M" selected>M (15% normal)</option>
+                  <option value="Q">Q (25% cuartil)</option>
+                  <option value="H">H (30% alta)</option>
+                </select>
+              </div>
+              <div class="form-group col-half">
+                <label for="qr-margin">Margen (Quiet zone):</label>
+                <select id="qr-margin">
+                  <option value="0">0 (Sin borde)</option>
+                  <option value="1">1 módulo</option>
+                  <option value="2" selected>2 (Recomendado)</option>
+                  <option value="4">4 módulos</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Vista Previa y Descargas -->
+        <div class="col">
+          <!-- Tarjeta: Vista previa -->
+          <div class="card">
+            <div class="card-header-row">
+              <h2 class="card-title">👁️ Vista previa</h2>
+              <button class="btn btn-outline btn-sm" id="btn-toggle-bg">
+                🔳 Sin Fondo (Transparente)
+              </button>
+            </div>
+
+            <!-- Opciones de fondo cuando está activo -->
+            <div id="bg-options" class="bg-options hidden">
+              <div class="color-picker-row">
+                <span class="text-sm">Color de fondo:</span>
+                <input type="color" id="bg-color-picker" value="#FFFFFF">
+                <span class="hex-label">HEX:</span>
+                <input type="text" id="bg-color-hex" value="#FFFFFF" class="input-hex">
+              </div>
+              <div class="swatches" id="bg-swatches">
+                <button class="swatch" data-color="#FFFFFF" style="background:#FFFFFF" title="Blanco"></button>
+                <button class="swatch" data-color="#000000" style="background:#000000" title="Negro"></button>
+                <button class="swatch" data-color="#FDFBF7" style="background:#FDFBF7" title="Crema"></button>
+                <button class="swatch" data-color="#E2E8F0" style="background:#E2E8F0" title="Gris"></button>
+                <button class="swatch" data-color="#0F172A" style="background:#0F172A" title="Azul Oscuro"></button>
+              </div>
+            </div>
+
+            <!-- Canvas de Vista Previa -->
+            <div class="preview-container">
+              <div class="preview-box checkerboard" id="preview-box">
+                <canvas id="qr-canvas" width="220" height="220"></canvas>
+                <div class="placeholder-text" id="placeholder-text">
+                  Genera un QR para ver aquí
+                </div>
+              </div>
+              <div class="preview-info" id="preview-info">
+                Matriz: 0x0 módulos • Sin fondo (Transparente)
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta: Medidas y Proporciones -->
+          <div class="card">
+            <h2 class="card-title">📐 Medidas y Proporciones</h2>
+            <div class="presets-row">
+              <span class="text-sm text-muted">Presets 1:1:</span>
+              <div class="chips" id="size-chips">
+                <button class="chip" data-size="256">256 px</button>
+                <button class="chip" data-size="512">512 px</button>
+                <button class="chip active" data-size="1024">1024 px (HD)</button>
+                <button class="chip" data-size="2048">2048 px</button>
+                <button class="chip" data-size="4096">4096 px</button>
+              </div>
+            </div>
+
+            <div class="form-row mt-3">
+              <div class="form-group col-half">
+                <label for="export-width">Ancho (px):</label>
+                <input type="number" id="export-width" value="1024" min="64" max="8192" step="64">
+              </div>
+              <div class="form-group col-half">
+                <label for="export-height">Alto (px):</label>
+                <input type="number" id="export-height" value="1024" min="64" max="8192" step="64">
+              </div>
+            </div>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="lock-aspect" checked>
+              <span>Mantener proporción 1:1 (cuadrado)</span>
+            </label>
+          </div>
+
+          <!-- Tarjeta: Descargas y Portapapeles -->
+          <div class="card">
+            <h2 class="card-title">💾 Opciones de Descarga y Portapapeles</h2>
+            <p class="text-sm text-muted">Descargar archivo en tu dispositivo:</p>
+            <div class="btn-group-responsive mt-2">
+              <button class="btn btn-emerald" id="btn-download-svg">
+                📥 SVG<br><small>Vectorial</small>
+              </button>
+              <button class="btn btn-cyan" id="btn-download-png">
+                📥 PNG<br><small>Imagen</small>
+              </button>
+              <button class="btn btn-orange" id="btn-download-jpg">
+                📥 JPG<br><small>Con Fondo</small>
+              </button>
+            </div>
+
+            <hr class="divider">
+
+            <p class="text-sm text-muted">Copiar directo al portapapeles:</p>
+            <div class="btn-group-responsive mt-2">
+              <button class="btn btn-secondary" id="btn-copy-svg">
+                📋 Copiar SVG
+              </button>
+              <button class="btn btn-secondary" id="btn-copy-png">
+                📋 Copiar PNG
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="qrcodegen.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
