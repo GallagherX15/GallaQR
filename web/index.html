@@ -56,10 +56,10 @@
           </div>
         </div>
         <div class="topbar-right">
-          <a href="https://github.com/GallagherX15/GallaQR/releases" target="_blank" class="badge-link">
-            🐧 Linux & 🪟 Windows Apps
-          </a>
-          <a href="https://github.com/GallagherX15/GallaQR" target="_blank" class="btn btn-secondary btn-sm">
+          <button class="btn btn-accent btn-sm" id="btn-open-download-modal">
+            💻 Descargar App Desktop
+          </button>
+          <a href="https://github.com/GallagherX15/GallaQR" target="_blank" class="btn btn-secondary btn-sm" title="Ver código fuente en GitHub">
             ⭐ GitHub
           </a>
         </div>
@@ -235,9 +235,86 @@
               </button>
             </div>
           </div>
+
+          <!-- Banner Descargar App Nativa -->
+          <div class="card card-desktop-banner">
+            <div class="banner-content">
+              <span class="banner-icon">🚀</span>
+              <div>
+                <strong class="banner-title">¿Prefieres la versión de escritorio?</strong>
+                <p class="text-xs text-muted">Descarga la app nativa para Windows y Linux. Ultra rápida, 100% offline y sin necesidad de navegador.</p>
+              </div>
+            </div>
+            <button class="btn btn-accent btn-sm btn-block mt-2" id="btn-banner-download">
+              💻 Obtener App para Windows / Linux
+            </button>
+          </div>
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Modal de Descarga de App de Escritorio -->
+  <div class="modal-overlay hidden" id="download-modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 class="modal-title">💻 Descargar GallaQR Desktop</h2>
+          <span class="badge-version" id="modal-latest-version">v0.1.1</span>
+        </div>
+        <button class="btn-close-modal" id="btn-close-modal" title="Cerrar modal">&times;</button>
+      </div>
+      <p class="modal-description">
+        Aplicación nativa de alto rendimiento desarrollada en Rust. Elige tu sistema operativo y la descarga iniciará automáticamente:
+      </p>
+
+      <div class="download-grid">
+        <!-- Opción 1: Windows Instalador -->
+        <div class="download-card">
+          <div class="download-card-icon">🪟</div>
+          <div class="download-card-body">
+            <h3 class="download-card-title">Windows Instalador (.exe)</h3>
+            <p class="download-card-desc">Asistente de instalación oficial con acceso directo en el escritorio y menú inicio.</p>
+            <span class="download-card-meta">Windows 10 / 11 (64-bit)</span>
+          </div>
+          <a href="https://github.com/GallagherX15/GallaQR/releases/download/v0.1.1/GallaQR-Setup-v0.1.0.exe" id="link-download-win-installer" class="btn btn-primary download-action" download>
+            ⬇️ Descargar EXE
+          </a>
+        </div>
+
+        <!-- Opción 2: Windows Portable -->
+        <div class="download-card">
+          <div class="download-card-icon">📦</div>
+          <div class="download-card-body">
+            <h3 class="download-card-title">Windows Portable (.zip)</h3>
+            <p class="download-card-desc">No requiere permisos de administrador ni instalación. Solo descomprime y ejecuta.</p>
+            <span class="download-card-meta">Ideal para llevar en memoria USB</span>
+          </div>
+          <a href="https://github.com/GallagherX15/GallaQR/releases/download/v0.1.1/GallaQR-Windows-Portable.zip" id="link-download-win-portable" class="btn btn-secondary download-action" download>
+            ⬇️ Descargar ZIP
+          </a>
+        </div>
+
+        <!-- Opción 3: Linux -->
+        <div class="download-card">
+          <div class="download-card-icon">🐧</div>
+          <div class="download-card-body">
+            <h3 class="download-card-title">Linux Binario (.tar.gz)</h3>
+            <p class="download-card-desc">Binario ejecutable de alto rendimiento compatible con cualquier distribución Linux x86_64.</p>
+            <span class="download-card-meta">Ubuntu, Debian, Fedora, Arch Linux, etc.</span>
+          </div>
+          <a href="https://github.com/GallagherX15/GallaQR/releases/download/v0.1.1/gallaqr-linux-x86_64.tar.gz" id="link-download-linux" class="btn btn-secondary download-action" download>
+            ⬇️ Descargar TAR.GZ
+          </a>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a href="https://github.com/GallagherX15/GallaQR/releases" target="_blank" class="modal-footer-link">
+          Ver notas de versión y código fuente completo en GitHub &rarr;
+        </a>
+      </div>
+    </div>
   </div>
 
   <script src="qrcodegen.js"></script>

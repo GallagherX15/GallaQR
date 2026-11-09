@@ -585,6 +585,75 @@ ${bgRect}  <path d="${path}" fill="${fgColor}" />
     }
   });
 
+  // Modal de descargas de escritorio
+  const downloadModalOverlay = document.getElementById('download-modal-overlay');
+  const btnOpenDownloadModal = document.getElementById('btn-open-download-modal');
+  const btnCloseModal = document.getElementById('btn-close-modal');
+  const btnBannerDownload = document.getElementById('btn-banner-download');
+  const modalLatestVersion = document.getElementById('modal-latest-version');
+  const linkWinInstaller = document.getElementById('link-download-win-installer');
+  const linkWinPortable = document.getElementById('link-download-win-portable');
+  const linkLinux = document.getElementById('link-download-linux');
+
+  function openDownloadModal() {
+    if (downloadModalOverlay) {
+      downloadModalOverlay.classList.remove('hidden');
+    }
+  }
+
+  function closeDownloadModal() {
+    if (downloadModalOverlay) {
+      downloadModalOverlay.classList.add('hidden');
+    }
+  }
+
+  if (btnOpenDownloadModal) btnOpenDownloadModal.addEventListener('click', openDownloadModal);
+  if (btnBannerDownload) btnBannerDownload.addEventListener('click', openDownloadModal);
+  if (btnCloseModal) btnCloseModal.addEventListener('click', closeDownloadModal);
+
+  if (downloadModalOverlay) {
+    downloadModalOverlay.addEventListener('click', (e) => {
+      if (e.target === downloadModalOverlay) {
+        closeDownloadModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && downloadModalOverlay && !downloadModalOverlay.classList.contains('hidden')) {
+      closeDownloadModal();
+    }
+  });
+
+  // Consultar la API de GitHub para enlazar dinámicamente la última versión publicada
+  async function fetchLatestRelease() {
+    try {
+      const response = await fetch('https://api.github.com/repos/GallagherX15/GallaQR/releases/latest');
+      if (!response.ok) return;
+      const data = await response.json();
+      if (data.tag_name && modalLatestVersion) {
+        modalLatestVersion.textContent = data.tag_name;
+      }
+      if (Array.isArray(data.assets)) {
+        for (const asset of data.assets) {
+          const name = asset.name.toLowerCase();
+          const url = asset.browser_download_url;
+          if (name.endsWith('.exe') && linkWinInstaller) {
+            linkWinInstaller.href = url;
+          } else if (name.endsWith('.zip') && (name.includes('portable') || name.includes('windows')) && linkWinPortable) {
+            linkWinPortable.href = url;
+          } else if (name.endsWith('.tar.gz') && linkLinux) {
+            linkLinux.href = url;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Usando enlaces de descarga predeterminados:', err);
+    }
+  }
+
+  fetchLatestRelease();
+
   // Inicialización
   renderHistory();
   if (historyItems.length > 0) {
