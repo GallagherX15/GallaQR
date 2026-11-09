@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GallaQR
+Comment=Generador de Códigos QR para Linux (SVG y PNG sin fondo)
+Exec=/home/gallagherx/.local/bin/gallaqr
+Icon=gallaqr
+Terminal=false
+Type=Application
+Categories=Utility;Graphics;
+Keywords=QR;Code;Generator;SVG;PNG;Vector;
+StartupNotify=true
+

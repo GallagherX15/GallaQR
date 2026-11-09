@@ -1,0 +1,102 @@
+name: Release Build (Windows & Linux)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows (Portable & Installer)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Windows binary
+        run: cargo build --release
+
+      - name: Create Portable Package
+        shell: bash
+        run: |
+          mkdir -p dist/GallaQR-Portable/assets
+          cp target/release/gallaqr.exe dist/GallaQR-Portable/
+          cp assets/gallaqr.ico dist/GallaQR-Portable/assets/
+          touch dist/GallaQR-Portable/.portable
+          echo "GallaQR Portable - Ejecuta gallaqr.exe directamente." > dist/GallaQR-Portable/LEEME.txt
+          cd dist
+          7z a -tzip GallaQR-Windows-Portable.zip GallaQR-Portable
+
+      - name: Install Inno Setup and build installer
+        shell: pwsh
+        run: |
+          choco install innosetup -y
+          iscc installer/gallaqr.iss
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: |
+            dist/GallaQR-Windows-Portable.zip
+            dist/GallaQR-Setup-v*.exe
+
+  build-linux:
+    name: Build Linux Binary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwayland-dev libxkbcommon-dev libx11-dev libx11-xcb-dev libxcursor-dev libxi-dev
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Linux binary
+        run: cargo build --release
+
+      - name: Package Linux binary
+        run: |
+          mkdir -p dist/gallaqr-linux
+          cp target/release/gallaqr dist/gallaqr-linux/
+          cp gallaqr.desktop dist/gallaqr-linux/
+          cp -r assets dist/gallaqr-linux/
+          cd dist
+          tar -czvf gallaqr-linux-x86_64.tar.gz gallaqr-linux
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-binary
+          path: dist/gallaqr-linux-x86_64.tar.gz
+
+  release:
+    name: Publish GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            windows-binaries/*
+            linux-binary/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
