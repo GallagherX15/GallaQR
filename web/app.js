@@ -22,6 +22,7 @@
   const lockAspectCheckbox = document.getElementById('lock-aspect');
   const toast = document.getElementById('toast');
   const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
   const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
   const btnCloseSidebar = document.getElementById('btn-close-sidebar');
   const historyList = document.getElementById('history-list');
@@ -319,6 +320,11 @@ ${bgRect}  <path d="${path}" fill="${fgColor}" />
 
     renderHistory();
     generateQr(false);
+
+    // En móviles, cerrar automáticamente el sidebar al seleccionar un elemento
+    if (window.innerWidth <= 860) {
+      closeSidebar();
+    }
   }
 
   function clearForm() {
@@ -528,9 +534,40 @@ ${bgRect}  <path d="${path}" fill="${fgColor}" />
   qrEccSelect.addEventListener('change', () => { if (activeQr) generateQr(false); });
   qrMarginSelect.addEventListener('change', () => { if (activeQr) updatePreview(); });
 
-  // Sidebar toggle
-  btnToggleSidebar.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
-  btnCloseSidebar.addEventListener('click', () => sidebar.classList.add('collapsed'));
+  // Control responsive del Sidebar (móvil y escritorio)
+  function openSidebar() {
+    if (window.innerWidth <= 860) {
+      sidebar.classList.add('mobile-open');
+      sidebarOverlay.classList.add('active');
+    } else {
+      sidebar.classList.remove('collapsed');
+    }
+  }
+
+  function closeSidebar() {
+    if (window.innerWidth <= 860) {
+      sidebar.classList.remove('mobile-open');
+      sidebarOverlay.classList.remove('active');
+    } else {
+      sidebar.classList.add('collapsed');
+    }
+  }
+
+  function toggleSidebar() {
+    if (window.innerWidth <= 860) {
+      if (sidebar.classList.contains('mobile-open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    } else {
+      sidebar.classList.toggle('collapsed');
+    }
+  }
+
+  btnToggleSidebar.addEventListener('click', toggleSidebar);
+  btnCloseSidebar.addEventListener('click', closeSidebar);
+  sidebarOverlay.addEventListener('click', closeSidebar);
 
   // Botón nuevo QR
   btnNewQr.addEventListener('click', clearForm);

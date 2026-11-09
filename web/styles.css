@@ -692,6 +692,23 @@ input[type="color"]::-webkit-color-swatch {
 .text-sm { font-size: 12px; }
 .text-muted { color: var(--text-muted); }
 
+/* Overlay para oscurecer fondo en móviles cuando el historial se abre */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(2px);
+  z-index: 45;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
 /* Responsive adjustments */
 @media (max-width: 860px) {
   .sidebar {
@@ -699,12 +716,19 @@ input[type="color"]::-webkit-color-swatch {
     top: 0;
     bottom: 0;
     left: 0;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+    width: 290px;
+    max-width: 85vw;
+    margin-left: 0;
+    transform: translateX(-100%); /* Oculto por defecto en móvil */
+    box-shadow: none;
+    z-index: 50;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .sidebar.collapsed {
-    transform: translateX(-100%);
-    margin-left: 0;
+  /* Solo se muestra cuando el usuario presiona el botón en móvil */
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 6px 0 30px rgba(0, 0, 0, 0.85);
   }
 }
 
