@@ -871,13 +871,8 @@ impl GallaQrApp {
 
                 for (name, col) in presets {
                     let col32 = Color32::from_rgb(col[0], col[1], col[2]);
-                    let border_col = if col == [255, 255, 255] {
-                        Color32::from_gray(180)
-                    } else {
-                        Color32::from_gray(60)
-                    };
                     let btn = Button::new(RichText::new("■").color(col32).size(17.0))
-                        .stroke(Stroke::new(1.0, border_col))
+                        .stroke(Stroke::new(1.0, Color32::from_gray(60)))
                         .fill(Color32::from_rgb(30, 32, 40))
                         .corner_radius(CornerRadius::same(4));
                     if ui.add(btn).on_hover_text(name).clicked() {
@@ -1037,7 +1032,7 @@ impl GallaQrApp {
                     for (name, col) in bg_presets {
                         let col32 = Color32::from_rgb(col[0], col[1], col[2]);
                         let btn = Button::new(RichText::new("■").color(col32).size(15.0))
-                            .stroke(Stroke::new(1.0, Color32::from_gray(70)))
+                            .stroke(Stroke::new(1.0, Color32::from_gray(60)))
                             .fill(Color32::from_rgb(30, 32, 40))
                             .corner_radius(CornerRadius::same(4));
                         if ui.add(btn).on_hover_text(name).clicked() {
